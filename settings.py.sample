@@ -1,3 +1,5 @@
+import os
+
 URLS      = ["https://techcrunch.com/tag/medical-device/",
              "https://techcrunch.com/tag/medical/",
              "https://techcrunch.com/tag/healthcare/",
