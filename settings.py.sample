@@ -1,0 +1,10 @@
+URLS      = ["https://techcrunch.com/tag/medical-device/",
+             "https://techcrunch.com/tag/medical/",
+             "https://techcrunch.com/tag/healthcare/",
+             "https://techcrunch.com/health/"]
+
+HISTFILE  = os.path.dirname(os.path.realpath(__file__)) + "/db.txt"
+FROM      = "TechCrunch <techcrunch@domain.com>"
+TO        = "recipient@domain.com"
+SUBJ      = "TechCrunch MedTech Updates"
+DEMO_MODE = 0
