@@ -69,7 +69,7 @@ def main():
     for entry in soup.findAll('div', 'post-block'):
       (title, entry_url, description, img_url) = extract_post_data(entry)
       # Tag the entry
-      tag = hashlib.md5(title).hexdigest()
+      tag = hashlib.md5(title.encode('utf-8')).hexdigest()
       if tag not in history:
         # Add to email string
         email_data += "<a href='%s' style='font-weight:bold;font-size:150%%;'>%s</a><br><span style='font-size:120%%'>%s</span><br><img src='%s'><br><br>\n\n" % (entry_url, title, description, img_url)
