@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # 
 # TechCrunch Scraper
 # Adapted from Craigslist/SDN scraper
@@ -6,19 +6,17 @@
 # 2011 08 11
 # 
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import re
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import requests
-from urlparse import urljoin
 import smtplib
 import hashlib
-import os
 import email
 from email.mime.multipart import MIMEMultipart
-from email.MIMEImage import MIMEImage
+from email.mime.image import MIMEImage
 from email.mime.text import MIMEText
-from HTMLParser import HTMLParser
+import html
 from settings import *
 
 def mail(fr, to, subj, body, images_inline=0):
@@ -37,15 +35,15 @@ def mail(fr, to, subj, body, images_inline=0):
   msg['To'] = to
 
   if DEMO_MODE:
-    print "************ WOULD HAVE SENT THIS *************"
-    print msg.as_string(), "\n\n\n"
+    print("************ WOULD HAVE SENT THIS *************")
+    print(msg.as_string(), "\n\n\n")
   else:
     s = smtplib.SMTP('localhost')
     s.sendmail(fr, to, msg.as_string())
     s.quit()
 
 def grab_img(url):
-  data = urllib2.urlopen(url).read()
+  data = urllib.request.urlopen(url).read()
   return MIMEImage(data)
 
 def extract_post_data(entry):
@@ -57,13 +55,13 @@ def extract_post_data(entry):
 
 def main():
   # Read in history
-  history = map(lambda x: x.strip(), open(HISTFILE).readlines())
+  history = [x.strip() for x in open(HISTFILE).readlines()]
 
   email_data = ""
 
   for url in URLS:
     r = requests.get(url)
-    soup = BeautifulSoup(r.content)
+    soup = BeautifulSoup(r.content, 'html.parser')
 
     # Read in all the posts
     for entry in soup.findAll('div', 'post-block'):
@@ -78,8 +76,7 @@ def main():
 
   # Send email if any new entries
   if email_data:
-    htmlparser = HTMLParser()
-    dat = htmlparser.unescape(email_data).encode('utf-8')
+    dat = html.unescape(email_data)
     mail(FROM, TO, SUBJ, dat, images_inline=1)
 
   # Write out new history file
